@@ -1,0 +1,15 @@
+@()
+
+<!doctype html>
+<html>
+	<head></head>
+	<body>
+		@{
+			scalajs.html.scripts(
+				"client",
+				asset => controllers.routes.Assets.versioned(s"dist/$asset").toString,
+				name => getClass.getResource(s"/public/dist/$name") != null
+			)
+		}
+	</body>
+</html>
