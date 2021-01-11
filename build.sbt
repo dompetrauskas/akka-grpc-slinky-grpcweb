@@ -13,6 +13,7 @@ resolvers in ThisBuild ++= Seq(
 lazy val akkaVersion              = "2.6.10"
 lazy val akkaHttpVersion          = "10.2.0"
 lazy val akkaGrpcVersion          = "1.0.2"
+lazy val logbackVersion           = "1.2.3"
 lazy val scalaTestPlusPlayVersion = "5.0.0"
 lazy val scalaJsDomVersion        = "1.1.0"
 lazy val scalaJsScriptsVersion    = "1.1.4"
@@ -116,6 +117,7 @@ lazy val server = project
       "com.typesafe.akka" %% "akka-http2-support"       % akkaHttpVersion,
       "ch.megard"         %% "akka-http-cors"           % "0.4.2",
       "com.vmunier"       %% "scalajs-scripts"          % "1.1.4",
+      "ch.qos.logback"    % "logback-classic"           % logbackVersion,
       "com.typesafe.akka" %% "akka-actor-testkit-typed" % akkaVersion % Test,
       "com.typesafe.akka" %% "akka-stream-testkit"      % akkaVersion % Test,
       "org.scalatest"     %% "scalatest"                % "3.1.1" % Test

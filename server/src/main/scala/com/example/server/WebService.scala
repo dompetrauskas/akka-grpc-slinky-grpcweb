@@ -4,6 +4,7 @@ import akka.http.scaladsl.server.Directives
 import akka.http.scaladsl.server.Route
 import com.example.BuildInfo
 import com.example.server.TwirlImplicits._
+import com.example.server.WebService._
 
 class WebService() extends Directives {
 
@@ -11,10 +12,10 @@ class WebService() extends Directives {
     pathSingleSlash {
       get {
         complete(
-          if (BuildInfo.environmentMode == "prod") {
-            com.example.server.html.indexFullOptJs()
-          } else {
+          if (BuildInfo.environmentMode.equalsIgnoreCase("development")) {
             com.example.server.html.indexFastOptJs()
+          } else {
+            com.example.server.html.indexFullOptJs()
           }
         )
       }
@@ -23,11 +24,19 @@ class WebService() extends Directives {
       // optionally compresses the response with Gzip or Deflate
       // if the client accepts compressed responses
       encodeResponse {
-        getFromResource("public/" + file)
+        getFromResource(s"$AssetsPath/" + file)
       }
     },
     path("favicon.ico") {
       complete("")
     }
   )
+}
+
+object WebService {
+  val AssetsPath: String = if (BuildInfo.environmentMode.equalsIgnoreCase("production")) {
+    "public/dist"
+  } else {
+    "public"
+  }
 }

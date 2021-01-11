@@ -1,3 +1,5 @@
+@import com.example.server.WebService.AssetsPath
+
 @()
 
 <!doctype html>
@@ -8,8 +10,8 @@
 			scalajs.html.scripts(
 				"client",
 				name => {
-					val checksum = if (getClass.getResource(s"/public/$name.md5") != null) {
-						Some(scala.io.Source.fromResource(s"public/$name.md5").getLines().mkString(""))
+					val checksum = if (getClass.getResource(s"/$AssetsPath/$name.md5") != null) {
+						Some(scala.io.Source.fromResource(s"$AssetsPath/$name.md5").getLines().mkString(""))
 							.map(_.trim)
 							.filter(_.nonEmpty)
 					} else {
@@ -21,7 +23,7 @@
 					s"/assets/$prefix$name"
 				},
 				name => {
-					getClass.getResource(s"/public/$name") != null
+					getClass.getResource(s"/$AssetsPath/$name") != null
 				}
 			)
 		}
