@@ -1,0 +1,29 @@
+@()
+
+<!doctype html>
+<html>
+	<head></head>
+	<body>
+		@{
+			scalajs.html.scripts(
+				"client",
+				name => {
+					val checksum = if (getClass.getResource(s"/public/$name.md5") != null) {
+						Some(scala.io.Source.fromResource(s"public/$name.md5").getLines().mkString(""))
+							.map(_.trim)
+							.filter(_.nonEmpty)
+					} else {
+						None
+					}
+					val prefix = checksum
+						.map(_ + "-")
+						.getOrElse("")
+					s"/assets/$prefix$name"
+				},
+				name => {
+					getClass.getResource(s"/public/$name") != null
+				}
+			)
+		}
+	</body>
+</html>

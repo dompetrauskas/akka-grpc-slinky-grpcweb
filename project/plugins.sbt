@@ -1,6 +1,3 @@
-enablePlugins(BuildInfoPlugin)
-buildInfoPackage := "com.example"
-
 resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
 
 addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % "1.0.0")
@@ -18,10 +15,12 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-gzip" % "1.0.2")
 
 addSbtPlugin("com.typesafe.sbt" % "sbt-digest" % "1.1.4")
 
-val playGrpcVersion = "0.9.1"
-buildInfoKeys ++= Seq[BuildInfoKey]("playGrpcVersion" -> playGrpcVersion)
-addSbtPlugin("com.typesafe.play"                      % "sbt-plugin" % "2.8.7")
-resolvers += Resolver.bintrayRepo("playframework", "maven")
-libraryDependencies += "com.lightbend.play" %% "play-grpc-generators" % playGrpcVersion
+addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.7.6")
+
+addSbtPlugin("com.typesafe.sbt" % "sbt-twirl" % "1.5.0")
+
+addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % "0.10.0")
+
+addSbtPlugin("io.spray" % "sbt-revolver" % "0.9.1")
 
 addDependencyTreePlugin

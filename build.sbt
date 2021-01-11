@@ -1,10 +1,6 @@
 import BuildEnvPlugin.autoImport
 import BuildEnvPlugin.autoImport.BuildEnv
-import com.example.BuildInfo
-import com.typesafe.sbt.packager.docker.Cmd
-import com.typesafe.sbt.packager.docker.CmdLike
 import com.typesafe.sbt.packager.docker.DockerAlias
-import com.typesafe.sbt.packager.docker.DockerChmodType
 import com.typesafe.sbt.packager.docker.ExecCmd
 
 scalaVersion in ThisBuild := "2.13.4"
@@ -14,11 +10,9 @@ resolvers in ThisBuild ++= Seq(
   Resolver.sonatypeRepo("releases")
 )
 
-lazy val akkaVersion              = play.core.PlayVersion.akkaVersion
-lazy val akkaHttpVersion          = play.core.PlayVersion.akkaHttpVersion
+lazy val akkaVersion              = "2.6.10"
+lazy val akkaHttpVersion          = "10.2.0"
 lazy val akkaGrpcVersion          = "1.0.2"
-lazy val playVersion              = play.core.PlayVersion.current
-lazy val playGrpcVersion          = BuildInfo.playGrpcVersion
 lazy val scalaTestPlusPlayVersion = "5.0.0"
 lazy val scalaJsDomVersion        = "1.1.0"
 lazy val scalaJsScriptsVersion    = "1.1.4"
@@ -26,7 +20,7 @@ lazy val slinkyVersion            = "0.6.6"
 lazy val reactVersion             = "16.12.0"
 lazy val reactProxyVersion        = "1.1.8"
 
-lazy val `play-grpc-scala-js-grpcweb` = (project in file("."))
+lazy val `akka-grpc-scala-js-grpcweb` = (project in file("."))
   .aggregate(
     client,
     server
@@ -41,11 +35,6 @@ lazy val proto =
       PB.protoSources in Compile := Seq(
         (baseDirectory in ThisBuild).value / "proto" / "src" / "main" / "protobuf"
       )
-    )
-    .jvmSettings(
-      akkaGrpcExtraGenerators += play.grpc.gen.scaladsl.PlayScalaServerCodeGenerator,
-      libraryDependencies += "com.lightbend.play" %% "play-grpc-runtime"   % playGrpcVersion,
-      libraryDependencies += "com.lightbend.play" %% "play-grpc-scalatest" % playGrpcVersion % Test
     )
     .jsSettings(
       libraryDependencies += "com.thesamet.scalapb"         %%% "scalapb-runtime" % scalapb.compiler.Version.scalapbVersion,
@@ -95,7 +84,7 @@ lazy val client =
     .dependsOn(protoJs)
 
 lazy val server = project
-  .enablePlugins(PlayScala, AkkaGrpcPlugin, PlayAkkaHttp2Support, WebScalaJSBundlerPlugin)
+  .enablePlugins(AkkaGrpcPlugin, SbtTwirl, WebScalaJSBundlerPlugin, JavaAppPackaging, DockerPlugin, BuildInfoPlugin)
   .in(file("server"))
   .settings(
     scalaJSProjects := {
@@ -115,32 +104,38 @@ lazy val server = project
       }
     },
     pipelineStages := Seq(digest, gzip),
+    compile in Compile := ((compile in Compile) dependsOn scalaJSPipeline).value,
+    WebKeys.packagePrefix in Assets := "public/",
+    managedClasspath in Runtime += (packageBin in Assets).value,
     libraryDependencies ++= Seq(
-      guice,
-      "com.typesafe.akka"      %% "akka-discovery"       % akkaVersion,
-      "com.typesafe.akka"      %% "akka-http"            % akkaHttpVersion,
-      "com.typesafe.akka"      %% "akka-http-spray-json" % akkaHttpVersion,
-      "com.vmunier"            %% "scalajs-scripts"      % scalaJsScriptsVersion,
-      "com.typesafe.play"      %% "play-test"            % playVersion % Test,
-      "org.scalatestplus.play" %% "scalatestplus-play"   % scalaTestPlusPlayVersion % Test
-    )
+      "com.typesafe.akka" %% "akka-actor-typed"         % akkaVersion,
+      "com.typesafe.akka" %% "akka-stream"              % akkaVersion,
+      "com.typesafe.akka" %% "akka-discovery"           % akkaVersion,
+      "com.typesafe.akka" %% "akka-pki"                 % akkaVersion,
+      "com.typesafe.akka" %% "akka-http"                % akkaHttpVersion,
+      "com.typesafe.akka" %% "akka-http2-support"       % akkaHttpVersion,
+      "ch.megard"         %% "akka-http-cors"           % "0.4.2",
+      "com.vmunier"       %% "scalajs-scripts"          % "1.1.4",
+      "com.typesafe.akka" %% "akka-actor-testkit-typed" % akkaVersion % Test,
+      "com.typesafe.akka" %% "akka-stream-testkit"      % akkaVersion % Test,
+      "org.scalatest"     %% "scalatest"                % "3.1.1" % Test
+    ),
+    Compile / mainClass := Some("com.example.server.Server"),
+    buildInfoKeys ++= Seq[BuildInfoKey]("environmentMode" -> autoImport.buildEnv.value),
+    buildInfoPackage := "com.example"
   )
   .settings(
-    dockerAliases in Docker += DockerAlias(None, None, "play-grpc-slinky-grpcweb", None),
-    packageName in Docker := "play-grpc-slinky-grpcweb",
+    dockerAliases in Docker += DockerAlias(None, None, "akka-grpc-slinky-grpcweb", None),
+    packageName in Docker := "akka-grpc-slinky-grpcweb",
     dockerBaseImage := "openjdk:8-alpine",
     dockerCommands := {
       val (stage0, stage1)           = dockerCommands.value.splitAt(8)
-      val (stage1part1, stage1part2) = stage1.splitAt(3)
+      val (stage1part1, stage1part2) = stage1.splitAt(5)
       stage0 ++ stage1part1 ++ Seq(ExecCmd("RUN", "apk", "add", "--no-cache", "bash")) ++ stage1part2
     },
-    dockerExposedPorts ++= Seq(9000),
-    dockerEntrypoint := Seq(
-      "/opt/docker/bin/server",
-      "-Dconfig.resource=docker-application.conf"
-    )
+    dockerExposedPorts ++= Seq(9000)
   )
   .dependsOn(protoJVM)
 
+addCommandAlias("serverDev", "~server/reStart")
 addCommandAlias("clientDev", "client/fastOptJS::startWebpackDevServer;~client/fastOptJS")
-addCommandAlias("serverDev", "~server/run")

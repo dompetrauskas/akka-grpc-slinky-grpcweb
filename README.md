@@ -1,4 +1,4 @@
-# Play gRPC Slinky gRPC-web
+# Akka gRPC Slinky gRPC-web
 
 This template project was the result of investigation into full-sack `Scala` web development experience with following requirements:
 
@@ -27,7 +27,7 @@ Using `IntelliJ` (tested with `2020.3`):
 - Enable `sbt shell` for compilation.
 - Use Run/Debug configurations provided in `/.run`.
 
-`~serverDev` starts back-end based on Play Framework in `watch` mode. 
+`~serverDev` starts back-end based on Akka HTTP in `watch` mode. 
 It serves both `HTTP` and `gRPC` endpoints for front-end to consume.
 `~clientDev` starts `webpack dev server` with `HMR` enabled for `Scala.js`, specifically `Slinky`, front-end development.
 After running these commands and opening `localhost:9000`, back-end returns index page with
@@ -52,8 +52,6 @@ Tested with IntelliJ IDEA `2020.3.1` and Slinky `0.6.6`.
 
 ## Built on:
 - https://github.com/akka/akka-grpc
-- https://github.com/playframework/play-grpc
-- https://github.com/playframework/playframework
 - https://github.com/scalapb/scalapb-grpcweb
 - https://github.com/sbt/sbt-web
 - https://github.com/vmunier/sbt-web-scalajs
