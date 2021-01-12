@@ -1,7 +1,7 @@
 package com.example.server
 
 import akka.NotUsed
-import akka.actor.ActorSystem
+import akka.actor.typed.ActorSystem
 import akka.pattern.after
 import akka.stream.scaladsl.Sink
 import akka.stream.scaladsl.Source
@@ -12,8 +12,8 @@ import com.example.Service
 import scala.concurrent.Future
 import scala.concurrent.duration._
 
-class ServiceImpl(implicit actorSystem: ActorSystem) extends Service {
-  import actorSystem.dispatcher
+class ServiceImpl(implicit actorSystem: ActorSystem[_]) extends Service {
+  import actorSystem.executionContext
 
   override def unary(in: Request): Future[Response] = {
     after(2.seconds)(Future.successful(Response(s"Received [${in.payload}]")))

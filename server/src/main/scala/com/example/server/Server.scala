@@ -1,6 +1,7 @@
 package com.example.server
 
-import akka.actor.ActorSystem
+import akka.actor.typed.ActorSystem
+import akka.actor.typed.scaladsl.Behaviors
 import akka.grpc.scaladsl.WebHandler
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.HttpRequest
@@ -17,23 +18,12 @@ import scala.concurrent.Future
 import scala.util.Failure
 import scala.util.Success
 
-object Server {
-  def main(args: Array[String]): Unit = {
-    val conf = ConfigFactory
-      .parseString("akka.http.server.preview.enable-http2 = on")
-      .withFallback(ConfigFactory.defaultApplication())
-    val system = ActorSystem("akka-grpc-slinky-grpcweb", conf)
-    new Server(system).run()
-  }
-}
-
-class Server(system: ActorSystem) extends Directives {
+object Server extends Directives {
 
   private val logger = LoggerFactory.getLogger(this.getClass)
 
-  def run(): Future[Http.ServerBinding] = {
-    implicit val actorSystem: ActorSystem = system
-    import actorSystem.dispatcher
+  def startHttpServer()(implicit actorSystem: ActorSystem[_]): Unit = {
+    import actorSystem.executionContext
 
     val service: PartialFunction[HttpRequest, Future[HttpResponse]] = {
       ServiceHandler.partial(new ServiceImpl())
@@ -66,11 +56,20 @@ class Server(system: ActorSystem) extends Directives {
     binding.onComplete {
       case Success(binding) =>
         logger.info(s"gRPC server bound to: ${binding.localAddress}")
-
       case Failure(ex) =>
         logger.error(s"gRPC server binding failed", ex)
+        actorSystem.terminate()
     }
+  }
 
-    binding
+  def main(args: Array[String]): Unit = {
+    val rootBehavior = Behaviors.setup[Nothing] { context =>
+      startHttpServer()(context.system)
+      Behaviors.empty
+    }
+    val conf = ConfigFactory
+      .parseString("akka.http.server.preview.enable-http2 = on")
+      .withFallback(ConfigFactory.defaultApplication())
+    ActorSystem[Nothing](rootBehavior, "akka-grpc-slinky-grpcweb", conf)
   }
 }
