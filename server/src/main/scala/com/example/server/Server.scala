@@ -9,7 +9,6 @@ import akka.http.scaladsl.model.HttpResponse
 import akka.http.scaladsl.server.Directives
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.RouteResult
-import com.example.BuildInfo
 import com.example.ServiceHandler
 import com.typesafe.config.ConfigFactory
 import org.slf4j.LoggerFactory
@@ -44,11 +43,7 @@ object Server extends Directives {
 
     val binding = Http()
       .newServerAt(
-        interface = if (BuildInfo.environmentMode.equalsIgnoreCase("production")) {
-          "0.0.0.0"
-        } else {
-          "localhost"
-        },
+        interface = "0.0.0.0",
         port = 9000
       )
       .bind(Route.toFunction(route))

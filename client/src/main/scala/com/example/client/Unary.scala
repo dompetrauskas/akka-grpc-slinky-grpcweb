@@ -1,8 +1,7 @@
 package com.example.client
 
+import com.example.client.App.serviceStub
 import com.example.service.Request
-import com.example.service.ServiceGrpcWeb
-import scalapb.grpc.Channels
 import scalapb.grpcweb.Metadata
 import slinky.core._
 import slinky.core.annotations.react
@@ -16,8 +15,6 @@ import scala.util.Success
 @react object Unary {
   type Props = Unit
 
-  val stub = ServiceGrpcWeb.stub(Channels.grpcwebChannel("http://localhost:9000"))
-
   val component: FunctionalComponent[Props] = FunctionalComponent { _ =>
     val (status, setStatus) = useState("Request pending")
 
@@ -26,7 +23,7 @@ import scala.util.Success
         val req                = Request(payload = "Hello!")
         val metadata: Metadata = Metadata("custom-header-1" -> "unary-value")
 
-        stub.unary(req, metadata).onComplete {
+        serviceStub.unary(req, metadata).onComplete {
           case Success(value) =>
             setStatus(s"Request success: ${value.payload}")
           case Failure(ex) =>

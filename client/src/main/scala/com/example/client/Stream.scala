@@ -1,10 +1,9 @@
 package com.example.client
 
+import com.example.client.App.serviceStub
 import com.example.service.Request
 import com.example.service.Response
-import com.example.service.ServiceGrpcWeb
 import io.grpc.stub.StreamObserver
-import scalapb.grpc.Channels
 import scalapb.grpcweb.Metadata
 import slinky.core._
 import slinky.core.annotations.react
@@ -17,8 +16,6 @@ import scala.scalajs.js.timers.setTimeout
 @react object Stream {
   case class Props(cancel: Boolean)
 
-  val stub = ServiceGrpcWeb.stub(Channels.grpcwebChannel("http://localhost:9000"))
-
   val component: FunctionalComponent[Props] = FunctionalComponent { props =>
     val (status, setStatus) = useState("Request pending")
 
@@ -29,7 +26,7 @@ import scala.scalajs.js.timers.setTimeout
 
         var resCount = 0
 
-        val stream = stub.serverStreaming(
+        val stream = serviceStub.serverStreaming(
           req,
           metadata,
           new StreamObserver[Response] {
