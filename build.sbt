@@ -67,7 +67,6 @@ lazy val client =
       npmDevDependencies in Compile += "file-loader"         -> "6.2.0",
       npmDevDependencies in Compile += "style-loader"        -> "2.0.0",
       npmDevDependencies in Compile += "css-loader"          -> "5.0.1",
-      npmDevDependencies in Compile += "ttf-loader"          -> "1.0.2",
       npmDevDependencies in Compile += "html-webpack-plugin" -> "4.3.0",
       npmDevDependencies in Compile += "webpack-merge"       -> "5.7.3",
       scalaJSStage := {
