@@ -20,6 +20,8 @@ lazy val scalaJsScriptsVersion    = "1.1.4"
 lazy val slinkyVersion            = "0.6.6"
 lazy val reactVersion             = "16.12.0"
 lazy val reactProxyVersion        = "1.1.8"
+lazy val semanticUiReact          = "2.0.3"
+lazy val semanticUiCss            = "2.4.1"
 
 lazy val `akka-grpc-slinky-grpcweb` = (project in file("."))
   .aggregate(
@@ -60,9 +62,12 @@ lazy val client =
       npmDependencies in Compile += "react"                  -> reactVersion,
       npmDependencies in Compile += "react-dom"              -> reactVersion,
       npmDependencies in Compile += "react-proxy"            -> reactProxyVersion,
+      npmDependencies in Compile += "semantic-ui-react"      -> semanticUiReact,
+      npmDependencies in Compile += "semantic-ui-css"        -> semanticUiCss,
       npmDevDependencies in Compile += "file-loader"         -> "6.2.0",
       npmDevDependencies in Compile += "style-loader"        -> "2.0.0",
       npmDevDependencies in Compile += "css-loader"          -> "5.0.1",
+      npmDevDependencies in Compile += "ttf-loader"          -> "1.0.2",
       npmDevDependencies in Compile += "html-webpack-plugin" -> "4.3.0",
       npmDevDependencies in Compile += "webpack-merge"       -> "5.7.3",
       scalaJSStage := {

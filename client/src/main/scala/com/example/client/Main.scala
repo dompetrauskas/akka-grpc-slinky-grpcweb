@@ -5,9 +5,16 @@ import slinky.hot
 import slinky.web.ReactDOM
 
 import scala.scalajs.LinkingInfo
+import scala.scalajs.js
 import scala.scalajs.js.annotation.JSExportTopLevel
+import scala.scalajs.js.annotation.JSImport
+
+@js.native
+@JSImport("semantic-ui-css/semantic.min.css", JSImport.Namespace)
+object SemanticUiCss extends js.Object
 
 object Main {
+  val css = SemanticUiCss
 
   @JSExportTopLevel("main")
   def main(): Unit = {
