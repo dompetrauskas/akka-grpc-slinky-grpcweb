@@ -1,5 +1,6 @@
 package com.example.client
 
+import com.example.semanticui.Segment
 import com.example.service.ServiceGrpcWeb
 import io.grpc.ManagedChannel
 import scalapb.grpc.Channels
@@ -17,9 +18,9 @@ import scala.scalajs.LinkingInfo
   def render() = {
     Fragment(
       h1("Hello world!"),
-      Unary(),
-      Stream(cancel = false),
-      Stream(cancel = true)
+      Segment(Unary()),
+      Segment(Stream(cancel = false)),
+      Segment(Stream(cancel = true))
     )
   }
 }
