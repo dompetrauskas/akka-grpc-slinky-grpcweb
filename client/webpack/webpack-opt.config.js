@@ -11,6 +11,20 @@ module.exports = merge(core, {
   mode: "production",
   devtool: "source-map",
   entry: entries,
+  module: {
+    rules: [
+      {
+        test: /\.png$/i,
+        loader: 'file-loader',
+        options: { name: 'images/[name].[hash].[ext]', publicPath: "assets" }
+      },
+      {
+        test: /\.(woff2?|[ot]tf|eot|svg)$/i,
+        loader: 'file-loader',
+        options: { name: 'fonts/[name].[hash].[ext]', publicPath: "assets" }
+      }
+    ]
+  },
   plugins: [
     new webpack.DefinePlugin({
       'process.env': {

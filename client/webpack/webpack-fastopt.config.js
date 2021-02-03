@@ -16,7 +16,20 @@ module.exports = merge(core, {
       {
         test: /\-fastopt.js$/,
         use: [ require.resolve('./fastopt-loader.js') ]
+      },
+      {
+        test: /\.png$/i,
+        loader: 'file-loader',
+        options: { name: 'images/[name].[hash].[ext]', publicPath: 'http://localhost:8080' }
+      },
+      {
+        test: /\.(woff2?|[ot]tf|eot|svg)$/i,
+        loader: 'file-loader',
+        options: { name: 'fonts/[name].[hash].[ext]', publicPath: 'http://localhost:8080' }
       }
     ]
+  },
+  output: {
+    publicPath: "http://localhost:8080/",
   }
 })

@@ -16,16 +16,6 @@ module.exports = {
       {
         test: /\.css$/,
         use: [ 'style-loader', 'css-loader' ]
-      },
-      {
-        test: /\.png$/i,
-        loader: 'file-loader',
-        options: { name: 'images/[name].[hash].[ext]', publicPath: '../' }
-      },
-      {
-        test: /\.(woff2?|[ot]tf|eot|svg)$/i,
-        loader: 'file-loader',
-        options: { name: 'fonts/[name].[hash].[ext]', publicPath: '../' }
       }
     ]
   },
