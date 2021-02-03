@@ -1,6 +1,9 @@
 package com.example.client
 
+import com.example.semanticui.Icon
+import com.example.semanticui.IconName._
 import com.example.semanticui.Segment
+import com.example.semanticui.Size._
 import com.example.service.ServiceGrpcWeb
 import io.grpc.ManagedChannel
 import scalapb.grpc.Channels
@@ -17,6 +20,7 @@ import scala.scalajs.LinkingInfo
 
   def render() = {
     Fragment(
+      Icon(name = home, size = massive),
       h1("Hello world!"),
       Segment(Unary()),
       Segment(Stream(cancel = false)),

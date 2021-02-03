@@ -7,4 +7,5 @@ import scala.scalajs.js.annotation.JSImport
 @js.native
 object SemanticUiReact extends js.Object {
   val Segment: js.Object = js.native
+  val Icon: js.Object    = js.native
 }

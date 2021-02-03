@@ -20,16 +20,13 @@ module.exports = merge(core, {
       {
         test: /\.png$/i,
         loader: 'file-loader',
-        options: { name: 'images/[name].[hash].[ext]', publicPath: 'http://localhost:8080' }
+        options: { name: 'images/[name].[hash].[ext]' }
       },
       {
         test: /\.(woff2?|[ot]tf|eot|svg)$/i,
         loader: 'file-loader',
-        options: { name: 'fonts/[name].[hash].[ext]', publicPath: 'http://localhost:8080' }
+        options: { name: 'fonts/[name].[hash].[ext]' }
       }
     ]
-  },
-  output: {
-    publicPath: "http://localhost:8080/",
   }
 })
