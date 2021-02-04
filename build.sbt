@@ -60,12 +60,11 @@ lazy val client =
       npmDependencies in Compile += "react"                  -> reactVersion,
       npmDependencies in Compile += "react-dom"              -> reactVersion,
       npmDependencies in Compile += "react-proxy"            -> reactProxyVersion,
-      npmDevDependencies in Compile += "file-loader"         -> "6.0.0",
-      npmDevDependencies in Compile += "style-loader"        -> "1.2.1",
-      npmDevDependencies in Compile += "css-loader"          -> "3.5.3",
+      npmDevDependencies in Compile += "file-loader"         -> "6.2.0",
+      npmDevDependencies in Compile += "style-loader"        -> "2.0.0",
+      npmDevDependencies in Compile += "css-loader"          -> "5.0.1",
       npmDevDependencies in Compile += "html-webpack-plugin" -> "4.3.0",
-      npmDevDependencies in Compile += "copy-webpack-plugin" -> "5.1.1",
-      npmDevDependencies in Compile += "webpack-merge"       -> "4.2.2",
+      npmDevDependencies in Compile += "webpack-merge"       -> "5.7.3",
       scalaJSStage := {
         autoImport.buildEnv.value match {
           case BuildEnv.Production =>
@@ -85,7 +84,7 @@ lazy val client =
     .dependsOn(protoJs)
 
 lazy val server = project
-  .enablePlugins(AkkaGrpcPlugin, SbtTwirl, WebScalaJSBundlerPlugin, JavaAppPackaging, DockerPlugin, BuildInfoPlugin)
+  .enablePlugins(AkkaGrpcPlugin, WebScalaJSBundlerPlugin, JavaAppPackaging, DockerPlugin, BuildInfoPlugin)
   .in(file("server"))
   .settings(
     scalaJSProjects := {
@@ -104,7 +103,6 @@ lazy val server = project
           Seq.empty
       }
     },
-    pipelineStages := Seq(digest, gzip),
     compile in Compile := ((compile in Compile) dependsOn scalaJSPipeline).value,
     WebKeys.packagePrefix in Assets := "public/",
     managedClasspath in Runtime += (packageBin in Assets).value,
@@ -116,7 +114,6 @@ lazy val server = project
       "com.typesafe.akka" %% "akka-http"                % akkaHttpVersion,
       "com.typesafe.akka" %% "akka-http2-support"       % akkaHttpVersion,
       "ch.megard"         %% "akka-http-cors"           % "0.4.2",
-      "com.vmunier"       %% "scalajs-scripts"          % "1.1.4",
       "ch.qos.logback"    % "logback-classic"           % logbackVersion,
       "com.typesafe.akka" %% "akka-actor-testkit-typed" % akkaVersion % Test,
       "com.typesafe.akka" %% "akka-stream-testkit"      % akkaVersion % Test,

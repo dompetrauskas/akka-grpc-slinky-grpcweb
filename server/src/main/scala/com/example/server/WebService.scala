@@ -1,9 +1,10 @@
 package com.example.server
 
+import akka.http.scaladsl.model.StatusCodes
+import akka.http.scaladsl.model.Uri
 import akka.http.scaladsl.server.Directives
 import akka.http.scaladsl.server.Route
 import com.example.BuildInfo
-import com.example.server.TwirlImplicits._
 import com.example.server.WebService._
 
 class WebService() extends Directives {
@@ -11,13 +12,13 @@ class WebService() extends Directives {
   val route: Route = concat(
     pathSingleSlash {
       get {
-        complete(
-          if (BuildInfo.environmentMode.equalsIgnoreCase("development")) {
-            com.example.server.html.indexFastOptJs()
-          } else {
-            com.example.server.html.indexFullOptJs()
+        if (BuildInfo.environmentMode.equalsIgnoreCase("development")) {
+          redirect(Uri("http://localhost:8080"), StatusCodes.PermanentRedirect)
+        } else {
+          encodeResponse {
+            getFromResource(s"$AssetsPath/index.html")
           }
-        )
+        }
       }
     },
     pathPrefix("assets" / Remaining) { file =>

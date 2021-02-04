@@ -1,5 +1,4 @@
 var path = require("path");
-var CopyWebpackPlugin = require('copy-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
@@ -17,21 +16,14 @@ module.exports = {
       {
         test: /\.css$/,
         use: [ 'style-loader', 'css-loader' ]
-      },
-      // "file" loader for svg
-      {
-        test: /\.svg$/,
-        use: [
-          {
-            loader: 'file-loader',
-            query: {
-              name: 'static/media/[name].[hash:8].[ext]'
-            }
-          }
-        ]
       }
     ]
   },
+  plugins: [
+    new HtmlWebpackPlugin({
+      title: "akka-grpc-slinky-grpcweb"
+    })
+  ],
   output: {
     devtoolModuleFilenameTemplate: (f) => {
       if (f.resourcePath.startsWith("http://") ||
@@ -41,12 +33,12 @@ module.exports = {
       } else {
         return "webpack://" + f.namespace + "/" + f.resourcePath;
       }
-    },
-    publicPath: "http://localhost:8080/",
+    }
   },
   devServer: {
     headers: {
       "Access-Control-Allow-Origin": "*"
-    }
+    },
+    historyApiFallback: true
   }
 }

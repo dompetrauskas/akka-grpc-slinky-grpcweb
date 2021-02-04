@@ -1,12 +1,15 @@
 package com.example.client
 
 import com.example.service.ServiceGrpcWeb
+import io.grpc.ManagedChannel
 import scalapb.grpc.Channels
 import scalapb.grpcweb.Metadata
 import slinky.core._
 import slinky.core.annotations.react
 import slinky.core.facade.Fragment
 import slinky.web.html._
+
+import scala.scalajs.LinkingInfo
 
 @react class App extends StatelessComponent {
   type Props = Unit
@@ -23,5 +26,13 @@ import slinky.web.html._
 
 object App {
 
-  val serviceStub: ServiceGrpcWeb.Service[Metadata] = ServiceGrpcWeb.stub(Channels.grpcwebChannel(""))
+  val grpcwebChannel: ManagedChannel = Channels.grpcwebChannel(
+    if (LinkingInfo.developmentMode) {
+      "http://localhost:9000"
+    } else {
+      ""
+    }
+  )
+
+  val serviceStub: ServiceGrpcWeb.Service[Metadata] = ServiceGrpcWeb.stub(grpcwebChannel)
 }

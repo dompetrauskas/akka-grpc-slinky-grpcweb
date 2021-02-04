@@ -1,5 +1,5 @@
 var path = require("path");
-var merge = require('webpack-merge');
+const { merge } = require('webpack-merge');
 var core = require('./webpack-core.config.js')
 var webpack = require("webpack");
 
@@ -17,5 +17,9 @@ module.exports = merge(core, {
         NODE_ENV: JSON.stringify('production')
       }
     })
-  ]
+  ],
+  output: {
+    publicPath: '/assets/',
+    filename: '[contenthash]-client-opt.js'
+  }
 })

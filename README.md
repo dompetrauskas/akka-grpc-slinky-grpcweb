@@ -28,10 +28,10 @@ Using `IntelliJ` (tested with `2020.3`):
 - Use Run/Debug configurations provided in `/.run`.
 
 `~serverDev` starts back-end based on Akka HTTP in `watch` mode. 
-It serves both `HTTP` and `gRPC` endpoints for front-end to consume.
-`~clientDev` starts `webpack dev server` with `HMR` enabled for `Scala.js`, specifically `Slinky`, front-end development.
-After running these commands and opening `localhost:9000`, back-end returns index page with
-script definition that wires-in front-end.
+It serves `gRPC` endpoints for front-end to consume on `localhost:9000`.
+
+`~clientDev` starts `webpack dev server` with `HMR` enabled for front-end development with 
+`Scala.js` and `Slinky`. Opening `localhost:8080` in the browser will serve `index.html`.
 
 ### Production mode
 
@@ -39,8 +39,9 @@ Using `sbt`:
 - Start `sbt` with production flag enabled - `sbt "-Denv=prod"`
 - `server/docker:publishLocal`
 
-In production mode, optimized front-end bundle is packaged and stored in back-end's assets,
-then served with aggressive caching enabled by fingerprinting.
+In production mode, optimized front-end bundle and all assets are packaged together with the back-end, 
+then served with aggressive caching enabled by fingerprinting. Server serves both `HTTP` and `gRPC` 
+endpoints.
 
 ## Slinky IntelliJ support
 
