@@ -67,10 +67,10 @@ lazy val client =
       npmDevDependencies in Compile += "webpack-merge"       -> "5.7.3",
       scalaJSStage := {
         autoImport.buildEnv.value match {
-          case BuildEnv.Production =>
-            FullOptStage
-          case _ =>
+          case BuildEnv.Development =>
             FastOptStage
+          case _ =>
+            FullOptStage
         }
       },
       webpackResources := baseDirectory.value / "webpack" * "*",

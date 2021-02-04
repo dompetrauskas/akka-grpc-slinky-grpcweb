@@ -24,8 +24,7 @@ Using `sbt`:
 - `~clientDev`
 
 Using `IntelliJ` (tested with `2020.3`):
-- Enable `sbt shell` for compilation.
-- Use Run/Debug configurations provided in `/.run`.
+- Use `dev` Run/Debug configurations provided in `/.run`.
 
 `~serverDev` starts back-end based on Akka HTTP in `watch` mode. 
 It serves `gRPC` endpoints for front-end to consume on `localhost:9000`.
@@ -33,11 +32,17 @@ It serves `gRPC` endpoints for front-end to consume on `localhost:9000`.
 `~clientDev` starts `webpack dev server` with `HMR` enabled for front-end development with 
 `Scala.js` and `Slinky`. Opening `localhost:8080` in the browser will serve `index.html`.
 
+IntelliJ's `sbt shell` must be enabled to make sbt plugins run during compile - 
+integrated Scala compile server won't trigger them.
+
 ### Production mode
 
 Using `sbt`:
 - Start `sbt` with production flag enabled - `sbt "-Denv=prod"`
 - `server/docker:publishLocal`
+
+Using `IntelliJ` (tested with `2020.3`):
+- Use `server prod` Run/Debug configuration provided in `/.run`.
 
 In production mode, optimized front-end bundle and all assets are packaged together with the back-end, 
 then served with aggressive caching enabled by fingerprinting. Server serves both `HTTP` and `gRPC` 
