@@ -20,6 +20,6 @@ module.exports = merge(core, {
   ],
   output: {
     publicPath: '/assets/',
-    filename: '[contenthash]-client-opt.js'
+    filename: '[name].[contenthash].bundle.js'
   }
 })
