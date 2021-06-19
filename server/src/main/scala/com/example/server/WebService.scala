@@ -13,7 +13,7 @@ class WebService() extends Directives {
     pathSingleSlash {
       get {
         if (BuildInfo.environmentMode.equalsIgnoreCase("development")) {
-          redirect(Uri("http://localhost:8080"), StatusCodes.PermanentRedirect)
+          redirect(Uri("http://localhost:8080"), StatusCodes.TemporaryRedirect)
         } else {
           encodeResponse {
             getFromResource(s"$AssetsPath/index.html")
@@ -35,9 +35,10 @@ class WebService() extends Directives {
 }
 
 object WebService {
-  val AssetsPath: String = if (BuildInfo.environmentMode.equalsIgnoreCase("production")) {
-    "public/dist"
-  } else {
-    "public"
-  }
+  val AssetsPath: String =
+    if (BuildInfo.environmentMode.equalsIgnoreCase("production")) {
+      "public/dist"
+    } else {
+      "public"
+    }
 }
