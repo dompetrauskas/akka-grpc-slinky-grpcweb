@@ -10,7 +10,6 @@ import akka.http.scaladsl.server.Directives
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.RouteResult
 import ch.megard.akka.http.cors.scaladsl.settings.CorsSettings
-import com.example.BuildInfo
 import com.example.ServiceHandler
 import com.typesafe.config.ConfigFactory
 import org.slf4j.LoggerFactory
@@ -19,7 +18,10 @@ import scala.concurrent.Future
 import scala.util.Failure
 import scala.util.Success
 
-object Server extends Directives {
+trait ServerBase extends Directives {
+
+  implicit val corsSettings: CorsSettings
+  val webServiceRoute: Route
 
   private val logger = LoggerFactory.getLogger(this.getClass)
 
@@ -30,13 +32,6 @@ object Server extends Directives {
       ServiceHandler.partial(new ServiceImpl())
     }
 
-    val indexAndAssets = new WebService().route
-
-    implicit val corsSettings: CorsSettings = if (BuildInfo.environmentMode.equalsIgnoreCase("development")) {
-      CorsSettings.defaultSettings
-    } else {
-      WebHandler.defaultCorsSettings
-    }
     val grpcWebServiceHandlers = WebHandler.grpcWebHandler(service)
 
     val handlerRoute: Route = { ctx =>
@@ -44,7 +39,7 @@ object Server extends Directives {
     }
 
     val route = concat(
-      indexAndAssets,
+      webServiceRoute,
       handlerRoute
     )
 

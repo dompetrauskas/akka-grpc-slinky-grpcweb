@@ -20,16 +20,16 @@ while `gRPC`'s basic functionality has all the required features.
 ### Development mode
 
 Using `sbt`:
-- `~serverDev`
-- `~clientDev`
+- `startServerDev`
+- `startClientDev`
 
-Using `IntelliJ` (tested with `2020.3`):
-- Use `dev` Run/Debug configurations provided in `/.run`.
+Using `IntelliJ` (tested with `2021.3`):
+- Use `server dev start` and `client dev start` Run/Debug configurations provided in `/.run`.
 
-`~serverDev` starts back-end based on Akka HTTP in `watch` mode. 
+`startServerDev` starts back-end based on Akka HTTP in `watch` mode. 
 It serves `gRPC` endpoints for front-end to consume on `localhost:9000`.
 
-`~clientDev` starts `webpack dev server` with `HMR` enabled for front-end development with 
+`startClientDev` starts `webpack dev server` with `HMR` enabled for front-end development with 
 `Scala.js` and `Slinky`. Opening `localhost:8080` in the browser will serve `index.html`.
 
 IntelliJ's `sbt shell` must be enabled to make sbt plugins run during compile - 
@@ -38,28 +38,25 @@ integrated Scala compile server won't trigger them.
 ### Production mode
 
 Using `sbt`:
-- Start `sbt` with production flag enabled - `sbt "-Denv=prod"`
-- `server/docker:publishLocal`
+- `serverProd/run`
 
-Using `IntelliJ` (tested with `2020.3`):
-- Use `server prod` Run/Debug configuration provided in `/.run`.
+Using `IntelliJ` (tested with `2021.3`):
+- Use `server prod run` Run/Debug configuration provided in `/.run`.
 
 In production mode, optimized front-end bundle and all assets are packaged together with the back-end, 
 then served with aggressive caching enabled by fingerprinting. Server serves both `HTTP` and `gRPC` 
 endpoints.
 
+Docker image publishing is implemented with [sbt-native-packager](https://github.com/sbt/sbt-native-packager).
+
 ## Slinky IntelliJ support
 
-https://slinky.dev/docs/installation/ describes how to add support `@react` for macro.
-If documented approach fails, manual plugin installation can be done by downloading 
-https://mvnrepository.com/artifact/me.shadaj/slinky-core-ijext `.jar` 
-and manually installing it as IntelliJ plugin through `Settings -> Plugins -> Install Plugin from Disk...`. 
-Tested with IntelliJ IDEA `2020.3.1` and Slinky `0.6.6`.
+https://slinky.dev/docs/installation/ section `IntelliJ Support` describes how to add support for `@react` macro.
 
 ## Built on:
-- https://github.com/akka/akka-grpc
-- https://github.com/scalapb/scalapb-grpcweb
-- https://github.com/sbt/sbt-web
-- https://github.com/vmunier/sbt-web-scalajs
-- https://github.com/scalacenter/scalajs-bundler
-- https://github.com/shadaj/slinky
+- [akka-grpc](https://github.com/akka/akka-grpc)
+- [scalapb-grpcweb](https://github.com/scalapb/scalapb-grpcweb)
+- [sbt-web](https://github.com/sbt/sbt-web)
+- [sbt-web-scalajs](https://github.com/vmunier/sbt-web-scalajs)
+- [scalajs-bundler](https://github.com/scalacenter/scalajs-bundler)
+- [slinky](https://github.com/shadaj/slinky)
